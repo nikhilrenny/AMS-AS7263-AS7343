@@ -1,0 +1,49 @@
+# AS7343 14-channel multispectral sensor devicetree binding.
+# Proprietary and confidential. Not for public distribution.
+
+description: |
+  AMS AS7343 14-channel multispectral sensor (18 channels with SMUX
+  Direct Chain Configuration across 3 chains). I2C, fixed 7-bit address
+  0x39. Not SparkFun-specific — this binding applies to any board
+  carrying the bare AS7343 die (SparkFun breakout, custom LEAF PCB, etc).
+
+compatible: "ams,as7343"
+
+include: [i2c-device.yaml]
+
+properties:
+  again:
+    type: int
+    default: 9
+    description: |
+      Default AGAIN spectral gain setting (0-12, maps to 0.5x-2048x per
+      datasheet CFG1 register). Default 9 = 256x.
+
+  atime:
+    type: int
+    default: 29
+    description: Default ATIME integration-step count (0-255).
+
+  astep:
+    type: int
+    default: 599
+    description: Default ASTEP integration step size (0-65534).
+
+  channel-count:
+    type: string
+    enum:
+      - "6"
+      - "12"
+      - "18"
+    default: "18"
+    description: |
+      Number of channels read per sample_fetch. 18 uses all 3 Direct
+      Chain SMUX chains; 6/12 use fewer chains for faster cycles.
+
+  led-present:
+    type: boolean
+    description: Set if an external LED is wired to the LDR pin.
+
+  int-gpios:
+    type: phandle-array
+    description: Optional INT pin (active-low, open-drain).

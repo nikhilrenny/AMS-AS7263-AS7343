@@ -1,0 +1,4 @@
+# Proprietary and confidential. Not for public distribution.
+
+rsource "as7343/Kconfig"
+rsource "as7263/Kconfig"

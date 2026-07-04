@@ -1,0 +1,37 @@
+# AS7343 14-channel multispectral sensor driver
+# Proprietary and confidential. Not for public distribution.
+
+config AS7343
+	bool "AS7343 multispectral sensor"
+	default y
+	depends on DT_HAS_AMS_AS7343_ENABLED
+	select I2C
+	help
+	  Enable driver for the AMS AS7343 14-channel multispectral sensor.
+	  Uses Direct Chain Configuration for full 18-channel custom SMUX
+	  mapping (not limited to the RAM/SMUXEN default).
+
+if AS7343
+
+config AS7343_LED
+	bool "Enable LED driver (LDR pin) attribute support"
+	default y
+	help
+	  Exposes SENSOR_ATTR_AS7343_LED_ON / LED_DRIVE. Disable if LDR pin
+	  is left unconnected to save a small amount of code space.
+
+config AS7343_GPIO
+	bool "Enable GPIO pin attribute support"
+	default n
+	help
+	  Exposes SENSOR_ATTR_AS7343_GPIO_MODE / GPIO_OUT for the sensor's
+	  own GPIO pin (sync/trigger use). Disable if unused.
+
+config AS7343_FLICKER
+	bool "Enable flicker detection (FD) support"
+	default n
+	help
+	  Exposes SENSOR_ATTR_AS7343_FD_GAIN and related flicker-detection
+	  register access. Not used in LEAF's reflectance/fluorescence path.
+
+endif # AS7343

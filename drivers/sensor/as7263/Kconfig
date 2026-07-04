@@ -1,0 +1,22 @@
+# AS7263 6-channel NIR spectral sensor driver
+# Proprietary and confidential. Not for public distribution.
+
+config AS7263
+	bool "AS7263 NIR spectral sensor"
+	default y
+	depends on DT_HAS_AMS_AS7263_ENABLED
+	select I2C
+	help
+	  Enable driver for the AMS AS7263 6-channel NIR spectral sensor.
+	  Uses the AS726x polled virtual-register I2C protocol (no direct
+	  register file, no SMUX).
+
+if AS7263
+
+config AS7263_LED
+	bool "Enable LED driver attribute support"
+	default y
+	help
+	  Exposes SENSOR_ATTR_AS7263_LED_ON / LED_DRIVE for LED_DRV.
+
+endif # AS7263
