@@ -16,6 +16,7 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/logging/log.h>
+#include <string.h>
 #include "as7343.h"
 
 LOG_MODULE_REGISTER(as7343, CONFIG_SENSOR_LOG_LEVEL);
@@ -288,6 +289,11 @@ static int as7343_sample_fetch(const struct device *devp, enum sensor_channel ch
     return as7343_measure_raw(&cfg->bus, data->dev.data);
 }
 
+void as7343_dev_init(struct as7343_dev *dev)
+{
+    memset(dev, 0, sizeof(*dev));
+}
+
 static int as7343_channel_get(const struct device *devp, enum sensor_channel chan,
                    struct sensor_value *val)
 {
@@ -355,6 +361,7 @@ static int as7343_attr_get(const struct device *devp, enum sensor_channel chan,
 {
     const struct as7343_config *cfg = devp->config;
     uint8_t raw;
+    uint16_t raw16;
     int ret;
 
     ARG_UNUSED(chan);
@@ -368,6 +375,20 @@ static int as7343_attr_get(const struct device *devp, enum sensor_channel chan,
         ret = as7343_reg_read(&cfg->bus, AS7343_REG_ATIME, &raw);
         val->val1 = raw;
         return ret;
+    case SENSOR_ATTR_AS7343_ASTEP:
+        ret = as7343_reg_read16(&cfg->bus, AS7343_REG_ASTEP, &raw16);
+        val->val1 = raw16;
+        return ret;
+    case SENSOR_ATTR_AS7343_WTIME:
+        ret = as7343_reg_read(&cfg->bus, AS7343_REG_WTIME, &raw);
+        val->val1 = raw;
+        return ret;
+#ifdef CONFIG_AS7343_LED
+    case SENSOR_ATTR_AS7343_LED_DRIVE:
+        ret = as7343_reg_read(&cfg->bus, AS7343_REG_LED, &raw);
+        val->val1 = raw & 0x7F;
+        return ret;
+#endif
     default:
         return -ENOTSUP;
     }
@@ -399,8 +420,8 @@ static int as7343_init(const struct device *devp)
     if (ret) {
         return ret;
     }
-    if (id != AS7343DeviceID) {
-        LOG_ERR("AS7343 ID mismatch: got 0x%02x, expected 0x%02x", id, AS7343DeviceID);
+    if (id != AS7343_DEVICE_ID) {
+        LOG_ERR("AS7343 ID mismatch: got 0x%02x, expected 0x%02x", id, AS7343_DEVICE_ID);
         return -ENODEV;
     }
 

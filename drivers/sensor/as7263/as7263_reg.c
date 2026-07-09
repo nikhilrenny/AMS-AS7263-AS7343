@@ -61,7 +61,25 @@ static int as7263_wait_rx_valid(const struct i2c_dt_spec *bus)
 
 int as7263_vreg_read(const struct i2c_dt_spec *bus, uint8_t vreg, uint8_t *data)
 {
-    int ret = as7263_wait_tx_ready(bus);
+    uint8_t stale, status;
+    int ret;
+
+    /* Clear any stale RX byte left over from a prior/incomplete transaction
+     * before starting a new read (per AS726x datasheet Fig 8, mirrors
+     * SparkFun's virtualReadRegister pre-check). Without this the sensor's
+     * indirection state machine can desync and every subsequent read hangs. */
+    ret = i2c_reg_read_byte_dt(bus, AS7263_PHYS_STATUS, &status);
+    if (ret) {
+        return ret;
+    }
+    if (status & AS7263_STATUS_RX_VALID) {
+        ret = i2c_reg_read_byte_dt(bus, AS7263_PHYS_READ, &stale);
+        if (ret) {
+            return ret;
+        }
+    }
+
+    ret = as7263_wait_tx_ready(bus);
 
     if (ret) {
         return ret;

@@ -158,6 +158,12 @@ static int as7263_attr_get(const struct device *devp, enum sensor_channel chan,
         ret = as7263_vreg_read(&cfg->bus, AS7263_VREG_INT_T, &raw);
         val->val1 = raw;
         return ret;
+#ifdef CONFIG_AS7263_LED
+    case SENSOR_ATTR_AS7263_LED_DRIVE:
+        ret = as7263_vreg_read(&cfg->bus, AS7263_VREG_LED_CONTROL, &raw);
+        val->val1 = (raw >> 4) & 0x03;
+        return ret;
+#endif
     default:
         return -ENOTSUP;
     }
@@ -181,6 +187,17 @@ static int as7263_init(const struct device *devp)
     }
 
     as7263_dev_init(&data->dev);
+
+    /* Soft reset (RST bit, control reg bit 7) before first read, matching
+     * SparkFun's begin(). The chip doesn't power-cycle on MCU reflash, so
+     * a half-completed transaction from a previous build can otherwise
+     * leave the virtual-register interface permanently wedged. */
+    ret = as7263_vreg_update(&cfg->bus, AS7263_VREG_CONTROL, BIT(7), BIT(7));
+    if (ret) {
+        LOG_ERR("AS7263 soft reset failed: %d", ret);
+        return ret;
+    }
+    k_msleep(1000);
 
     ret = as7263_vreg_read(&cfg->bus, AS7263_VREG_HW_TYPE, &hw_type);
     if (ret) {
