@@ -95,7 +95,19 @@ static int as7343_configure_default_chains(const struct i2c_dt_spec *bus)
     if (ret) return ret;
     ret = as7343_write_chain(bus, 0x5, chain2_default);
     if (ret) return ret;
-    return as7343_write_chain(bus, 0x6, chain3_default);
+    ret = as7343_write_chain(bus, 0x6, chain3_default);
+    if (ret) return ret;
+
+    /* AN001033 sec 2: writing the three chains alone isn't enough — CFG20's
+     * auto_smux bits (5:6) must be set to 18-channel mode, or the device
+     * keeps reading Chain 1 only (its power-on default: 0 = 6 channels).
+     * Matches AMS's own reference example (Figure 16:
+     * register_write(RA_CFG20, 0x60)). Without this, only Chain 1's five
+     * channels (450/FZ, 555/FY, 600/FXL, 855/NIR, Clear/VIS(1)) ever
+     * produce real data — confirmed against real capture logs where every
+     * Chain 2/3 channel read a permanent zero regardless of gain/exposure. */
+    return as7343_reg_update(bus, AS7343_REG_CFG20, 0x60,
+                              (uint8_t)(AS7343_AUTOSMUX_18_CHANNELS << 5));
 }
 
 static int as7343_wait_avalid(const struct i2c_dt_spec *bus, k_timeout_t timeout)
