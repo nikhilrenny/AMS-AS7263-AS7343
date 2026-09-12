@@ -1,5 +1,4 @@
 # AS7343 14-channel multispectral sensor driver
-# Proprietary and confidential. Not for public distribution.
 
 config AS7343
 	bool "AS7343 multispectral sensor"

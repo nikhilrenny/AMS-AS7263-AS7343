@@ -1,5 +1,4 @@
 # AS7263 6-channel NIR spectral sensor driver
-# Proprietary and confidential. Not for public distribution.
 
 config AS7263
 	bool "AS7263 NIR spectral sensor"

@@ -6,8 +6,6 @@
  * register access over Zephyr's i2c_dt_spec, and as7343.c for the Zephyr
  * sensor_driver_api glue.
  *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #ifndef ZEPHYR_DRIVERS_SENSOR_AS7343_H_

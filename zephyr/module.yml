@@ -1,5 +1,3 @@
-# LEAF out-of-tree Zephyr module manifest.
-# Proprietary and confidential. Not for public distribution.
 
 build:
   cmake: .

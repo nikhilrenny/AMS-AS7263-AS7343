@@ -1,5 +1,4 @@
 # AS7263 6-channel NIR spectral sensor devicetree binding.
-# Proprietary and confidential. Not for public distribution.
 
 description: |
   AMS AS7263 6-channel NIR spectral sensor (610/680/730/760/810/860 nm).

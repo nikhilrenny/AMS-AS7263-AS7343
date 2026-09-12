@@ -6,8 +6,6 @@
  * all 18 channels across 3 SMUX chains, giving full remap control (not
  * limited to the RAM/SMUXEN default like SparkFun's library).
  *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #define DT_DRV_COMPAT ams_as7343
@@ -140,7 +138,15 @@ static int as7343_measure_raw(const struct i2c_dt_spec *bus, uint16_t *out)
         return ret;
     }
 
-    ret = as7343_wait_avalid(bus, K_MSEC(500));
+    /* 2000ms fixed headroom, not the integration-time-derived value —
+     * simpler than reading ATIME/ASTEP back before every measurement, and
+     * generous enough for the slowest realistic 3-chain config. NOTE: this
+     * was 500ms before the CFG20 auto_smux fix (ADR 017), sized for a
+     * single chain. Now that all 3 chains genuinely run, integration time
+     * is ~3x longer — at atime=244/astep=500 that's already ~1.0s, so
+     * 500ms was intermittently timing out (and, worse, sometimes
+     * returning mid-cycle partial data instead of a clean timeout). */
+    ret = as7343_wait_avalid(bus, K_MSEC(2000));
     if (ret) {
         LOG_WRN("AS7343 sample timeout");
         return ret;

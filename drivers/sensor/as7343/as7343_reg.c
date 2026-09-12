@@ -5,9 +5,6 @@
  * Only this file touches i2c_dt_spec. Handles REG_BANK switching:
  * registers 0x58-0x66 need REG_BANK=1, registers 0x80+ need REG_BANK=0
  * (set via CFG0 bit 4). No sensor-API awareness here.
- *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #include <zephyr/drivers/i2c.h>

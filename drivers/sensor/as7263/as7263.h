@@ -7,8 +7,6 @@
  * a polled virtual-register protocol (datasheet sec "I2C Slave Interface").
  * No SMUX, no bank switching, single photodiode bank.
  *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #ifndef ZEPHYR_DRIVERS_SENSOR_AS7263_H_

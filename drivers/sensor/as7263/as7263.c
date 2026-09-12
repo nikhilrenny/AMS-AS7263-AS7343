@@ -7,8 +7,6 @@
  * register access is a polled transaction — sample_fetch is inherently
  * slower than AS7343's burst read (12 individual byte reads for raw data).
  *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #define DT_DRV_COMPAT ams_as7263

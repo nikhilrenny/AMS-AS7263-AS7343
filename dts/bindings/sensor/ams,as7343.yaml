@@ -1,5 +1,4 @@
 # AS7343 14-channel multispectral sensor devicetree binding.
-# Proprietary and confidential. Not for public distribution.
 
 description: |
   AMS AS7343 14-channel multispectral sensor (18 channels with SMUX

@@ -1,4 +1,3 @@
-# LEAF Zephyr module — repo root.
-# Proprietary and confidential. Not for public distribution.
+# AMS-AS7263-As7343 Zephyr module — repo root.
 
 add_subdirectory(drivers)

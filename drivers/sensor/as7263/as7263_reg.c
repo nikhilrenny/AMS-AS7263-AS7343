@@ -7,8 +7,6 @@
  * pending write) to WRITE, poll again, then write/read the data byte.
  * No sensor-API awareness here.
  *
- * Part of the LEAF multispectral sensing system.
- * Proprietary and confidential. Not for public distribution.
  */
 
 #include <zephyr/kernel.h>

@@ -1,4 +1,3 @@
-# Proprietary and confidential. Not for public distribution.
 
 zephyr_library()
 
